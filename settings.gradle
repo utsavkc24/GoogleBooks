@@ -1,0 +1,2 @@
+rootProject.name='GoogleBook'
+include ':app'
