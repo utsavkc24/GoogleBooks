@@ -919,12 +919,32 @@ public class MainActivity extends AppCompatActivity {
             JSONArray itemsArray = rootObject.getJSONArray("items");
             //Object of the first item in an array using getJSONObject
             for(int i = 0; i < itemsArray.length(); i++) {
+                String author;
                 JSONObject currentBook = itemsArray.getJSONObject(i);
                 JSONObject volumeInfo = currentBook.getJSONObject("volumeInfo");
                 //Get the title key.
                 String title = volumeInfo.getString("title");
-                //Adding object(title)
-                bookList.add(new Book(title));
+                //Check if JSONArray exist
+                if (volumeInfo.has("authors")){
+                    JSONArray authors = volumeInfo.getJSONArray("authors");
+
+                    //Check JSONArray Returns true if this object has no mapping for name or it has a mapping whose value is NULL.
+                    if(!volumeInfo.isNull("authors")){
+                        //Get 1st element
+                         author = (String) authors.get(0);
+                    }else{
+                        //assign info about missing info about author
+                        author = "*** Unknown author ***";
+                    }
+                }else{
+                    //assign info about missing info about author
+                    author = "*** missing info of authors ***";
+                }
+                //Get the Author name from authors key.
+                String publisherName = volumeInfo.getString("publisher");
+                //Adding object(title,author)
+                bookList.add(new Book(title,author,publisherName));
+
 
             }
         }catch (Exception e){
