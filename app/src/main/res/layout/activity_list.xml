@@ -3,28 +3,47 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
-        android:padding="12dp"
-        android:id="@+id/author_name"
+        android:padding="4dp"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Author"/>
+        android:fontFamily="sans-serif-black"
+        android:text="Title"/>
     <LinearLayout
-        android:padding="12dp"
+        android:padding="4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/author_name"
         android:layout_marginRight="12dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Title"
+        android:text="Author"
         />
         <TextView
             android:id="@+id/publisher_name"
+            android:layout_marginRight="12dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Subtitle"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_marginRight="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/currency"
+                android:text="INR: "/>
+            <TextView
+                android:id="@+id/retails_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1000"/>
+        </LinearLayout>
+
     </LinearLayout>
 
 
