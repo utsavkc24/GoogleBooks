@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * URL for books data from the Google dataset
      */
-    private static String JSON_STRING = "https://www.googleapis.com/books/v1/volumes?q=android&maxResults=3";
+    private static String JSON_STRING = "https://www.googleapis.com/books/v1/volumes?q=androidr";
     /**
      * Adapter for the list of books
      */

@@ -6,9 +6,6 @@ public class Book {
     private String mPublisher;
     private Double mAmount;
     private String mCurrency;
-public Book(String mTitle){
-    this.mTitle = mTitle;
-    }
     public Book(String mTitle, String mAuthor, String mPublisher, double mAmount, String mCurrency){
         this.mTitle = mTitle;
         this.mAuthor =  mAuthor;

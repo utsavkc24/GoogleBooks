@@ -148,26 +148,32 @@ public final class QueryUtils {
             for(int i = 0; i < itemsArray.length(); i++) {
                 JSONObject currentBook = itemsArray.getJSONObject(i);
                 JSONObject volumeInfo = currentBook.getJSONObject("volumeInfo");
-                JSONArray authors = volumeInfo.getJSONArray("authors");
-                // For a given book, extract the JSONObject associated with the
-                // key called "saleInfo", which represents a list of region and object RetailPrice{amount)
-                JSONObject saleInfo = currentBook.getJSONObject("saleInfo");
-                JSONObject retailPrice = saleInfo.getJSONObject("retailPrice");
-
-
                 //Get the title key.
                 String title = volumeInfo.getString("title");
+
                 //Extract the value for the key called "authors"
-                String author = (String)authors.get(0);
+                String author;
+                if (volumeInfo.has("authors")){
+                    JSONArray authors = volumeInfo.getJSONArray("authors");
+                    if(!volumeInfo.isNull("authors")) author = (String) authors.get(0);
+                    else author = "unknown author";
+                }else author = "missing info about author";
+                //Extract the value for the key called "price" and "currency"
+                double price = 0;
+                String currency;
+                JSONObject saleInfo = currentBook.getJSONObject("saleInfo");
+                if (saleInfo.has("retailPrice")){
+                    JSONObject retailBookPrice = saleInfo.getJSONObject("retailPrice");
+                    price = retailBookPrice.getDouble("amount");
+                    currency = retailBookPrice.getString("currencyCode");
+                }else{
+                    currency = "Not for sale";
+                }
                 //Get the Author name from authors key.
                 String publisherName = volumeInfo.getString("publisher");
-                // Extract the value for the key called "amount"
-                double amount = retailPrice.getDouble("amount");
-                // Extract the value for the key called "currencyCode"
-                String currency = retailPrice.getString("currencyCode");
 
                 //Adding object(title,author,publisher,price)
-                Book bookObject = new Book(title,author,publisherName,amount,currency);
+                Book bookObject = new Book(title,author,publisherName,price,currency);
                 //Book bookObject = new Book(title);
                 bookList.add(bookObject);
             }
