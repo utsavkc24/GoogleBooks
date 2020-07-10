@@ -4,6 +4,11 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical">
+    <SearchView
+        android:id="@+id/search_bar"
+        android:layout_height="wrap_content"
+        android:layout_width="288dp">
+    </SearchView>
     <ListView
         android:orientation="vertical"
         android:id="@+id/list"

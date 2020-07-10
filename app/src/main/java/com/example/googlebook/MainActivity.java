@@ -5,7 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +21,7 @@ public class MainActivity extends AppCompatActivity{
     /**
      * URL for books data from the Google dataset
      */
-    private static String JSON_STRING = "https://www.googleapis.com/books/v1/volumes?q=android";
+    private static String JSON_STRING = "https://www.googleapis.com/books/v1/volumes?q=";
     /**
      * Adapter for the list of books
      */
@@ -25,14 +31,33 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ListView listView = (ListView) findViewById(R.id.list);
-        // Create the adapter to convert the array to views
-        mAdapter = new BookAdapter(this, new ArrayList<Book>());
-        // Attach the adapter to a ListView
-        listView.setAdapter(mAdapter);
-        // Start the AsyncTask to fetch the earthquake data
-         BooksAsyncTask task = new BooksAsyncTask();
-        task.execute(JSON_STRING);
+        SearchView searchView = (SearchView)findViewById(R.id.search_bar);
+                final ListView listView = (ListView) findViewById(R.id.list);
+                // Create the adapter to convert the array to views
+                mAdapter = new BookAdapter(getApplicationContext(), new ArrayList<Book>());
+                // Attach the adapter to a ListView
+                listView.setAdapter(mAdapter);
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        if(query != null){
+                            // Start the AsyncTask to fetch the earthquake data
+                            BooksAsyncTask task = new BooksAsyncTask();
+                            task.execute(JSON_STRING + query);
+                        }
+                        else{
+                            Toast.makeText(MainActivity.this,"No match found",Toast.LENGTH_LONG);
+                        }
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        //mAdapter.getFilter().filter(newText);
+                        return false;
+                    }
+                });
+
     }
 
     /**
