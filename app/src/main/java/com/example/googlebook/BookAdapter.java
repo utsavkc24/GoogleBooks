@@ -1,20 +1,23 @@
 package com.example.googlebook;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
 public class BookAdapter extends ArrayAdapter<Book> {
-
-    public BookAdapter(@NonNull Context context, @NonNull List<Book> objects) {
+    private static final String LOG_TAG = BookAdapter.class.getSimpleName();
+    BookAdapter(@NonNull Context context, @NonNull List<Book> objects) {
         super(context, 0, objects);
     }
 
@@ -37,14 +40,15 @@ public class BookAdapter extends ArrayAdapter<Book> {
         TextView publisherTextView = listItemView.findViewById(R.id.publisher_name);
         TextView retailPriceTextView = listItemView.findViewById(R.id.retails_name);
         TextView currencyTextView = listItemView.findViewById(R.id.currency);
+        ImageView imageView = listItemView.findViewById(R.id.book_image);
         // Populate the data into the template view using the data object
         titleTextView.setText(currentLocation.getmTitle());
         authorTextView.setText(currentLocation.getmAuthor());
         publisherTextView.setText(currentLocation.getmPublisher());
         retailPriceTextView.setText(String.valueOf(currentLocation.getmAmount()));
         currencyTextView.setText(currentLocation.getmCurrency());
+        Glide.with(getContext()).load(currentLocation.getmImageUrl()).into(imageView);
         return listItemView;
     }
-
 
 }

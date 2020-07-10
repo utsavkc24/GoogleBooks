@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,10 +45,9 @@ public final class QueryUtils {
         }
 
         // Extract relevant fields from the JSON response and create a list of {@link Earthquake}s
-        List<Book> books = extractJsonResponse(jsonResponse);
 
         // Return the list of {@link Book}s
-        return books;
+        return extractJsonResponse(jsonResponse);
     }
 
     /**
@@ -114,7 +114,7 @@ public final class QueryUtils {
     private static String readFromStream(InputStream inputStream) throws IOException {
         StringBuilder output = new StringBuilder();
         if (inputStream != null) {
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
             BufferedReader reader = new BufferedReader(inputStreamReader);
             String line = reader.readLine();
             while (line != null) {
@@ -169,11 +169,13 @@ public final class QueryUtils {
                 }else{
                     currency = "Not for sale";
                 }
+                //Get the Image link from imageLinks
+                JSONObject imageLink = volumeInfo.getJSONObject("imageLinks");
+                String imageUrl = imageLink.getString("smallThumbnail");
                 //Get the Author name from authors key.
                 String publisherName = volumeInfo.getString("publisher");
-
                 //Adding object(title,author,publisher,price)
-                Book bookObject = new Book(title,author,publisherName,price,currency);
+                Book bookObject = new Book(title,author,publisherName,price,currency,imageUrl);
                 //Book bookObject = new Book(title);
                 bookList.add(bookObject);
             }
@@ -181,7 +183,7 @@ public final class QueryUtils {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception.
-            Log.e("QueryUtils", "Problem parsing the earthquake JSON results", e);
+            Log.e("QueryUtils", "Problem parsing the books JSON results", e);
         }
         return bookList;
     }

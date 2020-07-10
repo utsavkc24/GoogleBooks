@@ -2,20 +2,20 @@ package com.example.googlebook;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     /**
      * URL for books data from the Google dataset
      */
-    private static String JSON_STRING = "https://www.googleapis.com/books/v1/volumes?q=androidr";
+    private static String JSON_STRING = "https://www.googleapis.com/books/v1/volumes?q=android";
     /**
      * Adapter for the list of books
      */
