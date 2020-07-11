@@ -1,14 +1,13 @@
 package com.example.googlebook;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
-import android.os.AsyncTask;
+import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Loader;
 import android.os.Bundle;
-import android.text.Editable;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -17,11 +16,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<Book>> {
+    /**
+     * Constant value for the Book Loader ID.We can choose any integer.
+     * This really only comes into play if you're using multiple loader.
+     */
+    private static final int BOOKS_LOADER_ID = 1;
     /**
      * URL for books data from the Google dataset
      */
     private static String JSON_STRING = "https://www.googleapis.com/books/v1/volumes?q=";
+    SearchView searchView;
     /**
      * Adapter for the list of books
      */
@@ -31,84 +36,58 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SearchView searchView = (SearchView)findViewById(R.id.search_bar);
-                final ListView listView = (ListView) findViewById(R.id.list);
-                // Create the adapter to convert the array to views
-                mAdapter = new BookAdapter(getApplicationContext(), new ArrayList<Book>());
-                // Attach the adapter to a ListView
-                listView.setAdapter(mAdapter);
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        if(query != null){
-                            // Start the AsyncTask to fetch the earthquake data
-                            BooksAsyncTask task = new BooksAsyncTask();
-                            task.execute(JSON_STRING + query);
-                        }
-                        else{
-                            Toast.makeText(MainActivity.this,"No match found",Toast.LENGTH_LONG);
-                        }
-                        return false;
-                    }
+        final ListView listView = (ListView) findViewById(R.id.list);
+        searchView = (SearchView) findViewById(R.id.search_bar);
+        // Create the adapter to convert the array to views
+        mAdapter = new BookAdapter(getApplicationContext(), new ArrayList<Book>());
+        // Attach the adapter to a ListView
+        listView.setAdapter(mAdapter);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (query != null) {
+                    JSON_STRING = JSON_STRING + query;
+                    //Get a reference to the LoaderManeger,in order to interact with loaders.
+                    LoaderManager loaderManager = getLoaderManager();
+                    //Initialise the loader. pass in te ID constant defined above and pass
+                    // in null for the bundle. Pass in this activity for the LoaderCallbacks parameter
+                    //(which is valid because this activity implements the LoaderCallbacks interface).
+                    loaderManager.initLoader(BOOKS_LOADER_ID, null, MainActivity.this);
+                } else {
+                    Toast.makeText(MainActivity.this, "No match found", Toast.LENGTH_LONG);
+                }
+                return false;
+            }
 
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        //mAdapter.getFilter().filter(newText);
-                        return false;
-                    }
-                });
-
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //mAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
     }
 
-    /**
-     * {@link AsyncTask} to perform the network request on a background thread, and then
-     * update the UI with the list of earthquakes in the response.
-     * <p>
-     * AsyncTask has three generic parameters: the input type, a type used for progress updates, and
-     * an output type. Our task will take a String URL, and return an Books. We won't do
-     * progress updates, so the second generic is just Void.
-     * <p>
-     * We'll only override two of the methods of AsyncTask: doInBackground() and onPostExecute().
-     * The doInBackground() method runs on a background thread, so it can run long-running code
-     * (like network activity), without interfering with the responsiveness of the app.
-     * Then onPostExecute() is passed the result of doInBackground() method, but runs on the
-     * UI thread, so it can use the produced data to update the UI.
-     */
-    private class BooksAsyncTask extends AsyncTask<String, Void, List<Book>> {
+    @NonNull
+    @Override
+    public Loader<List<Book>> onCreateLoader(int id, Bundle args) {
+        //Create a new loader for the given URL.
+        return new BookLoader(this, JSON_STRING);
+    }
 
-        /**
-         * This method runs on a background thread and performs the network request.
-         * We should not update the UI from a background thread, so we return a list of
-         * {@link Book}s as the result.
-         */
-        @Override
-        protected List<Book> doInBackground(String... urls) {
-            // Don't perform the request if there are no URLs, or the first URL is null
-            if (urls.length < 1 || urls[0] == null) {
-                return null;
-            }
-
-            List<Book> result = QueryUtils.fetchBooksData(urls[0]);
-            return result;
+    @Override
+    public void onLoadFinished(@NonNull Loader<List<Book>> loader, List<Book> data) {
+        // Clear the adapter of previous earthquake data
+        mAdapter.clear();
+        // If there is a valid list of {@link Books}s, then add them to the adapter's
+        // data set. This will trigger the ListView to update.
+        if (data != null && !data.isEmpty()) {
+            mAdapter.addAll(data);
         }
+    }
 
-        /**
-         * This method runs on the main UI thread after the background work has been
-         * completed. This method receives as input, the return value from the doInBackground()
-         * method. First we clear out the adapter, to get rid of earthquake data from a previous
-         * query to Google Books. Then we update the adapter with the new list of earthquakes,
-         * which will trigger the ListView to re-populate its list items.
-         */
-        @Override
-        protected void onPostExecute(List<Book> data) {
-            // Clear the adapter of previous earthquake data
-            mAdapter.clear();
-
-            // If there is a valid list of {@link Earthquake}s, then add them to the adapter's
-            // data set. This will trigger the ListView to update.
-            if (data != null && !data.isEmpty()) {
-                mAdapter.addAll(data);
-            }
-        }
+    @Override
+    public void onLoaderReset(@NonNull Loader<List<Book>> loader) {
+        //Loader reset, so we can clear out our existing data.
+        mAdapter.clear();
     }
 }

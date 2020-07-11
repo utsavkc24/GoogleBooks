@@ -169,11 +169,16 @@ public final class QueryUtils {
                 }else{
                     currency = "Not for sale";
                 }
+                //Extract the value for the key called "publisher"
+                String publisherName;
+                if (volumeInfo.has("publisher")){
+                     publisherName = volumeInfo.getString("publisher");
+                    if(!volumeInfo.isNull("publisher")) publisherName = "NA";
+                    else publisherName = "unknown publisher";
+                }else publisherName = "missing info about publisher";
                 //Get the Image link from imageLinks
                 JSONObject imageLink = volumeInfo.getJSONObject("imageLinks");
                 String imageUrl = imageLink.getString("smallThumbnail");
-                //Get the Author name from authors key.
-                String publisherName = volumeInfo.getString("publisher");
                 //Adding object(title,author,publisher,price)
                 Book bookObject = new Book(title,author,publisherName,price,currency,imageUrl);
                 //Book bookObject = new Book(title);

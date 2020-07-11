@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
     <SearchView
         android:id="@+id/search_bar"
+        android:queryHint="Enter Book"
+        android:iconifiedByDefault="false"
+        tools:queryHint="Enter Book"
         android:layout_height="wrap_content"
         android:layout_width="288dp">
     </SearchView>
