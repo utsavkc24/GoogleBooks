@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
     /** TextView that is displayed when the list is empty */
     private TextView textView;
+    //hide loading indicator because the data has been loaded
+    private View loadingIndicator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +66,19 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         // Attach the adapter to a ListView
         listView.setAdapter(mAdapter);
         listView.setEmptyView(textView);
+        //hide loading indicator because the data has been loaded
+        loadingIndicator = findViewById(R.id.loading_spinner);
+        // Get a reference to the ConnectivityManager to check state of network connectivity
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        //Get details on the currently active default data network
+        assert connectivityManager != null;
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        boolean isConnected = networkInfo != null && networkInfo.isConnected();
+        if(!isConnected){
+            loadingIndicator.setVisibility(View.GONE);
+            // Set empty state text to display "No books found."
+            textView.setText(R.string.empty_state);
+        }
     }
 
     @Override
@@ -85,6 +101,8 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
          */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        textView.setVisibility(View.GONE);
+        loadingIndicator.setVisibility(View.GONE);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.option_menu,menu);
         //In the onCreateOptionsMenu() method that you created before,
@@ -102,6 +120,9 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     @NonNull
     @Override
     public Loader<List<Book>> onCreateLoader(int id, Bundle args) {
+        loadingIndicator.setVisibility(View.VISIBLE);
+        textView.setVisibility(View.GONE);
+
         Uri uri = Uri.parse(JSON_STRING);
         Uri.Builder builder = uri.buildUpon();
 
@@ -114,8 +135,6 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<Book>> loader, List<Book> data) {
-        // Set empty state text to display "No books found."
-        textView.setText(R.string.empty_state);
         // Clear the adapter of previous earthquake data
         mAdapter.clear();
         // If there is a valid list of {@link Books}s, then add them to the adapter's
@@ -123,6 +142,21 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         if (data != null && !data.isEmpty()) {
             mAdapter.addAll(data);
         }
+        loadingIndicator.setVisibility(View.GONE);
+        // Get a reference to the ConnectivityManager to check state of network connectivity
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        //Get details on the currently active default data network
+        assert connectivityManager != null;
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        assert networkInfo != null;
+        if(networkInfo.isConnected()){
+            // Set empty state text to display "No books found."
+            textView.setText(R.string.empty_state);
+        }else {
+            // Set empty state text to display "No Internet."
+            textView.setText(R.string.internet_state);
+        }
+
     }
 
     @Override
