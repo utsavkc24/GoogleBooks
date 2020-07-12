@@ -8,4 +8,5 @@
     <string name="todo">TODO</string>
     <string name="search_hint">Enter book name</string>
     <string name="book_name">Book Name</string>
+    <string name="empty_state">No books found</string>
 </resources>

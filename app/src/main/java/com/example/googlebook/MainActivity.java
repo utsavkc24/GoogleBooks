@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,15 +49,20 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
      */
     private BookAdapter mAdapter;
     private String query;
+
+    /** TextView that is displayed when the list is empty */
+    private TextView textView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        textView = (TextView)findViewById(R.id.empty_list);
         final ListView listView = (ListView) findViewById(R.id.list);
         // Create the adapter to convert the array to views
         mAdapter = new BookAdapter(getApplicationContext(), new ArrayList<Book>());
         // Attach the adapter to a ListView
         listView.setAdapter(mAdapter);
+        listView.setEmptyView(textView);
     }
 
     @Override
@@ -108,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<Book>> loader, List<Book> data) {
+        // Set empty state text to display "No books found."
+        textView.setText(R.string.empty_state);
         // Clear the adapter of previous earthquake data
         mAdapter.clear();
         // If there is a valid list of {@link Books}s, then add them to the adapter's
