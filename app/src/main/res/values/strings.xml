@@ -6,4 +6,6 @@
     <string name="inr">INR:</string>
     <string name="_1000">1000</string>
     <string name="todo">TODO</string>
+    <string name="search_hint">Enter book name</string>
+    <string name="book_name">Book Name</string>
 </resources>

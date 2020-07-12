@@ -4,14 +4,6 @@
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
-    <SearchView
-        android:id="@+id/search_bar"
-        android:queryHint="Enter Book"
-        android:iconifiedByDefault="false"
-        tools:queryHint="Enter Book"
-        android:layout_height="wrap_content"
-        android:layout_width="288dp">
-    </SearchView>
     <ListView
         android:orientation="vertical"
         android:id="@+id/list"
