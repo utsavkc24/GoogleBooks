@@ -33,11 +33,6 @@ public final class QueryUtils {
      * Query the Google Books dataset and return a list of {@link Book} objects.
      */
     public static List<Book> fetchBooksData(String requestUrl) {
-        try {
-            Thread.sleep(2000);
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
         // Create URL object
         URL url = createUrl(requestUrl);
 
@@ -163,6 +158,7 @@ public final class QueryUtils {
                     if(!volumeInfo.isNull("authors")) author = (String) authors.get(0);
                     else author = "unknown author";
                 }else author = "missing info about author";
+                author = "By " + author;
                 //Extract the value for the key called "price" and "currency"
                 double price = 0;
                 String currency;
@@ -174,18 +170,20 @@ public final class QueryUtils {
                 }else{
                     currency = "Not for sale";
                 }
-                //Extract the value for the key called "publisher"
-                String publisherName;
-                if (volumeInfo.has("publisher")){
-                     publisherName = volumeInfo.getString("publisher");
-                    if(!volumeInfo.isNull("publisher")) publisherName = "NA";
-                    else publisherName = "unknown publisher";
-                }else publisherName = "missing info about publisher";
+                /**
+                 * //Extract the value for the key called "publisher"
+                 *                 String publisherName;
+                 *                 if (volumeInfo.has("publisher")){
+                 *                      publisherName = volumeInfo.getString("publisher");
+                 *                     if(!volumeInfo.isNull("publisher")) publisherName = "NA";
+                 *                     else publisherName = "unknown publisher";
+                 *                 }else publisherName = "missing info about publisher";
+                 */
                 //Get the Image link from imageLinks
                 JSONObject imageLink = volumeInfo.getJSONObject("imageLinks");
                 String imageUrl = imageLink.getString("smallThumbnail");
                 //Adding object(title,author,publisher,price)
-                Book bookObject = new Book(title,author,publisherName,price,currency,imageUrl);
+                Book bookObject = new Book(title,author,price,currency,imageUrl);
                 //Book bookObject = new Book(title);
                 bookList.add(bookObject);
             }

@@ -37,16 +37,14 @@ public class BookAdapter extends ArrayAdapter<Book> {
         // finding the titleTextView in  and setting value to it.
         TextView titleTextView = listItemView.findViewById(R.id.title);
         TextView authorTextView = listItemView.findViewById(R.id.author_name);
-        TextView publisherTextView = listItemView.findViewById(R.id.publisher_name);
         TextView retailPriceTextView = listItemView.findViewById(R.id.retails_name);
-        //TextView currencyTextView = listItemView.findViewById(R.id.currency);
+        TextView currencyTextView = listItemView.findViewById(R.id.currency);
         ImageView imageView = listItemView.findViewById(R.id.book_image);
         // Populate the data into the template view using the data object
         titleTextView.setText(currentLocation.getmTitle());
         authorTextView.setText(currentLocation.getmAuthor());
-        publisherTextView.setText(currentLocation.getmPublisher());
         retailPriceTextView.setText(String.valueOf(currentLocation.getmAmount()));
-        //currencyTextView.setText(currentLocation.getmCurrency());
+        currencyTextView.setText(currentLocation.getmCurrency());
         Glide.with(getContext()).load(currentLocation.getmImageUrl()).into(imageView);
         return listItemView;
     }
