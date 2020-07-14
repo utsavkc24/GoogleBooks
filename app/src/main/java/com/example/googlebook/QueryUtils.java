@@ -33,6 +33,11 @@ public final class QueryUtils {
      * Query the Google Books dataset and return a list of {@link Book} objects.
      */
     public static List<Book> fetchBooksData(String requestUrl) {
+        try {
+            Thread.sleep(2000);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         // Create URL object
         URL url = createUrl(requestUrl);
 
