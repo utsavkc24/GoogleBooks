@@ -7,12 +7,14 @@ public class Book {
     private Double mAmount;
     private String mCurrency;
     private String mImageUrl;
-    public Book(String mTitle, String mAuthor, double mAmount, String mCurrency,String mImageUrl){
+    private String mBookUrl;
+    public Book(String mTitle, String mAuthor, double mAmount, String mCurrency,String mImageUrl,String mBookUrl){
         this.mTitle = mTitle;
         this.mAuthor =  mAuthor;
         this.mAmount = mAmount;
         this.mCurrency = mCurrency;
         this.mImageUrl = mImageUrl;
+        this.mBookUrl = mBookUrl;
     }
     public String getmTitle() {
         return mTitle;
@@ -32,5 +34,9 @@ public class Book {
 
     public String getmImageUrl() {
         return mImageUrl;
+    }
+
+    public String getmBookUrl() {
+        return mBookUrl;
     }
 }

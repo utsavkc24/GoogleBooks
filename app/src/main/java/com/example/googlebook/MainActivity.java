@@ -19,9 +19,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +70,31 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         listView.setEmptyView(textView);
         //hide loading indicator because the data has been loaded
         loadingIndicator = findViewById(R.id.loading_spinner);
+
+        // Set an item click listener on the ListView, which sends an intent to a web browser
+        // to open a website with more information about the selected book.
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Find the current book that was clicked on
+                Book currentBook = mAdapter.getItem(position);
+
+                //Convert the String URL into a URI Object (to pass into the Intent constructor)
+                if(currentBook.getmBookUrl() != null){
+                    Uri bookUri = Uri.parse(currentBook.getmBookUrl());
+
+                    //Create a new intent to view book URI.
+                    Intent websiteIntent = new Intent(Intent.ACTION_VIEW,bookUri);
+
+                    //Send the intent to launch a new activity;
+                    startActivity(websiteIntent);
+                }else{
+                    Toast toast = Toast.makeText(getApplicationContext(),"Not for sale",Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+        });
+
         // Get a reference to the ConnectivityManager to check state of network connectivity
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         //Get details on the currently active default data network

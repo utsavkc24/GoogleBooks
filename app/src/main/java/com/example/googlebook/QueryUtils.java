@@ -33,11 +33,6 @@ public final class QueryUtils {
      * Query the Google Books dataset and return a list of {@link Book} objects.
      */
     public static List<Book> fetchBooksData(String requestUrl) {
-        try {
-            Thread.sleep(2000);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
         // Create URL object
         URL url = createUrl(requestUrl);
 
@@ -167,11 +162,14 @@ public final class QueryUtils {
                 //Extract the value for the key called "price" and "currency"
                 double price = 0;
                 String currency;
+                String bookUrl = null;
                 JSONObject saleInfo = currentBook.getJSONObject("saleInfo");
                 if (saleInfo.has("retailPrice")){
                     JSONObject retailBookPrice = saleInfo.getJSONObject("retailPrice");
                     price = retailBookPrice.getDouble("amount");
                     currency = retailBookPrice.getString("currencyCode");
+                    //get the book self link
+                     bookUrl = saleInfo.getString("buyLink");
                 }else{
                     currency = "Not for sale";
                 }
@@ -188,7 +186,7 @@ public final class QueryUtils {
                 JSONObject imageLink = volumeInfo.getJSONObject("imageLinks");
                 String imageUrl = imageLink.getString("smallThumbnail");
                 //Adding object(title,author,publisher,price)
-                Book bookObject = new Book(title,author,price,currency,imageUrl);
+                Book bookObject = new Book(title,author,price,currency,imageUrl,bookUrl);
                 //Book bookObject = new Book(title);
                 bookList.add(bookObject);
             }
