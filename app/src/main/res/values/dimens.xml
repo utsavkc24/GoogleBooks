@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="cover_width">54dp</dimen>
+    <dimen name="layout_padding">8dp</dimen>
+    <dimen name="layout_leftMargin">16dp</dimen>
+</resources>
